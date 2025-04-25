@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en"></html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fake News Detection</title>
+    <style>
+        body {
+            background-color: #0000;
+            font-family: Arial, sans-serif;
+        }
+        .login {
+            text-align: center;
+            margin-top: 50px;
+        }
+        h1 {
+            color: Violet;
+        }
+        h4 {
+            color: Violet;
+        }
+        input {
+            padding: 10px;
+            margin: 10px 0;
+            width: 80%;
+            max-width: 400px;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: Violet;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: darkviolet;
+        }
+    </style>
+</head>
+<body>
+    <div class="login">
+        <h1>Fake News Detection</h1>
+        <form action="{{ url_for('predict') }}" method="post">
+            <input type="text" name="article" placeholder="Enter news article here" required="required" /><br>
+            <button type="submit" class="btn btn-primary btn-block btn-large">Predict Fake News or Not</button>
+        </form>
+        <br>
+        <br>
+        <h4>{{ prediction_text }}</h4>
+    </div>
+</body>
+</html>
