@@ -1,4 +1,4 @@
-setuptools>=65.5.0
+setuptools>=79.0.0
 wheel>=0.37.0
 flask==2.1.2
 numpy==1.24.2
