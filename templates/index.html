@@ -1,22 +1,19 @@
 <!DOCTYPE html>
-<html lang="en"></html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Fake News Detection</title>
     <style>
         body {
-            background-color: #0000;
+            background-color: black;
             font-family: Arial, sans-serif;
         }
         .login {
             text-align: center;
             margin-top: 50px;
         }
-        h1 {
-            color: Violet;
-        }
-        h4 {
+        h1, h4 {
             color: Violet;
         }
         input {
@@ -41,11 +38,10 @@
     <div class="login">
         <h1>Fake News Detection</h1>
         <form action="{{ url_for('predict') }}" method="post">
-            <input type="text" name="article" placeholder="Enter news article here" required="required" /><br>
-            <button type="submit" class="btn btn-primary btn-block btn-large">Predict Fake News or Not</button>
+            <input type="text" name="article" placeholder="Enter news article here" required /><br>
+            <button type="submit">Predict Fake News or Not</button>
         </form>
-        <br>
-        <br>
+        <br><br>
         <h4>{{ prediction_text }}</h4>
     </div>
 </body>
