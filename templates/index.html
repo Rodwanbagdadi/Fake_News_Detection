@@ -13,28 +13,42 @@
 
   <style>
     :root {
-      --primary-light: #f5f5f5;
-      --primary-dark: #0d0d0d;
-      --accent-light: #d1c4e9;
-      --accent-dark: #5b2c6f;
-      --text-light: #333;
-      --text-dark: #fff;
-      --axis-color-light: #333;
-      --axis-color-dark: #ccc;
+      --primary-light: #f9f9f9;
+      --primary-dark: #121212;
+      --secondary-light: #ffffff;
+      --secondary-dark: #1e1e1e;
+      --accent-light: #6200ea;
+      --accent-dark: #bb86fc;
+      --text-light: #333333;
+      --text-dark: #f5f5f5;
+      --border-light: #e0e0e0;
+      --border-dark: #333333;
+      --axis-color-light: #555555;
+      --axis-color-dark: #dddddd;
+      --fake-color: #e53935;
+      --real-color: #43a047;
+      --shadow-light: rgba(0, 0, 0, 0.1);
+      --shadow-dark: rgba(0, 0, 0, 0.3);
     }
 
     html[data-theme='light'] {
       --bg-color: var(--primary-light);
+      --card-bg: var(--secondary-light);
       --text-color: var(--text-light);
-      --accent-color: var(--accent-dark);
+      --accent-color: var(--accent-light);
       --axis-color: var(--axis-color-light);
+      --border-color: var(--border-light);
+      --shadow: var(--shadow-light);
     }
 
     html[data-theme='dark'] {
       --bg-color: var(--primary-dark);
+      --card-bg: var(--secondary-dark);
       --text-color: var(--text-dark);
-      --accent-color: var(--accent-light);
+      --accent-color: var(--accent-dark);
       --axis-color: var(--axis-color-dark);
+      --border-color: var(--border-dark);
+      --shadow: var(--shadow-dark);
     }
 
     body {
@@ -43,49 +57,130 @@
       background-color: var(--bg-color);
       color: var(--text-color);
       overflow-x: hidden;
-    }
-
-    .hero {
-      background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('/static/your_background_image.png') no-repeat center/cover;
-      padding: 60px 20px 20px 20px;
-      text-align: center;
-      min-height: 90vh;
+      height: 100vh;
       display: flex;
       flex-direction: column;
-      justify-content: center;
     }
 
-    .hero h1 {
-      font-size: 2.8rem;
-      margin-bottom: 10px;
-      color: white;
+    .header {
+      background-color: var(--card-bg);
+      padding: 15px 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 5px var(--shadow);
+      z-index: 10;
     }
 
-    .hero p {
-      font-size: 1.2rem;
-      color: white;
-      margin-bottom: 30px;
+    .header h1 {
+      margin: 0;
+      font-size: 1.5rem;
+      color: var(--accent-color);
+    }
+
+    .theme-switch-wrapper {
+      display: flex;
+      align-items: center;
+    }
+
+    .theme-switch {
+      display: inline-block;
+      height: 24px;
+      position: relative;
+      width: 50px;
+    }
+
+    .theme-switch input {
+      display: none;
+    }
+
+    .slider {
+      background-color: #ccc;
+      bottom: 0;
+      cursor: pointer;
+      left: 0;
+      position: absolute;
+      right: 0;
+      top: 0;
+      transition: .4s;
+      border-radius: 34px;
+    }
+
+    .slider:before {
+      background-color: white;
+      bottom: 4px;
+      content: "";
+      height: 16px;
+      left: 4px;
+      position: absolute;
+      transition: .4s;
+      width: 16px;
+      border-radius: 50%;
+    }
+
+    input:checked + .slider {
+      background-color: var(--accent-color);
+    }
+
+    input:checked + .slider:before {
+      transform: translateX(26px);
+    }
+
+    .switch-label {
+      margin-left: 10px;
+      font-size: 0.9rem;
+    }
+
+    .main-content {
+      display: flex;
+      flex: 1;
+      height: calc(100vh - 60px);
+    }
+
+    .input-section, .results-section {
+      flex: 1;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      box-sizing: border-box;
+    }
+
+    .input-section {
+      background-color: var(--bg-color);
+    }
+
+    .card {
+      background-color: var(--card-bg);
+      border-radius: 12px;
+      box-shadow: 0 4px 12px var(--shadow);
+      padding: 20px;
+      margin-bottom: 20px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
     }
 
     form {
       display: flex;
       flex-direction: column;
-      align-items: center;
-      gap: 15px;
-      margin-bottom: 30px;
+      flex: 1;
     }
 
-    input[type="text"] {
+    textarea {
+      flex: 1;
       padding: 15px;
       border-radius: 10px;
-      border: none;
+      border: 1px solid var(--border-color);
       font-size: 1rem;
-      width: 100%;
-      max-width: 500px;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      resize: none;
+      margin-bottom: 15px;
     }
 
-    button {
-      padding: 15px 30px;
+    button.analyze {
+      padding: 12px 20px;
       border: none;
       background-color: var(--accent-color);
       color: white;
@@ -93,141 +188,303 @@
       font-size: 1rem;
       border-radius: 10px;
       cursor: pointer;
+      align-self: flex-end;
     }
 
-    button:hover {
-      background-color: var(--primary-dark);
+    button.analyze:hover {
+      opacity: 0.9;
     }
 
-    .toggle-theme {
-      position: absolute;
-      top: 20px;
-      right: 20px;
-      padding: 10px;
-      background: var(--accent-color);
-      color: white;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
+    .results-section {
+      background-color: var(--bg-color);
+      overflow-y: auto;
     }
 
-    .container {
-      max-width: 900px;
-      margin: 20px auto;
+    .results-card {
+      background-color: var(--card-bg);
+      border-radius: 12px;
+      box-shadow: 0 4px 12px var(--shadow);
       padding: 20px;
-      text-align: center;
+      margin-bottom: 20px;
     }
 
-    .toast {
-      margin-top: 20px;
-      padding: 20px;
-      background: var(--accent-color);
-      color: var(--primary-light);
-      border-radius: 10px;
+    .consensus {
+      font-size: 1.5rem;
+      margin-bottom: 15px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--border-color);
+    }
+    
+    .consensus-fake {
+      color: var(--fake-color);
+    }
+    
+    .consensus-real {
+      color: var(--real-color);
+    }
+
+    .model-result {
+      margin-bottom: 20px;
+      padding-bottom: 15px;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .model-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 5px;
+    }
+
+    .model-name {
+      font-weight: bold;
+      color: var(--accent-color);
+    }
+
+    .model-prediction {
+      padding: 4px 12px;
+      border-radius: 15px;
+      font-weight: bold;
+    }
+
+    .prediction-fake {
+      background-color: rgba(229, 57, 53, 0.15);
+      color: var(--fake-color);
+    }
+
+    .prediction-real {
+      background-color: rgba(67, 160, 71, 0.15);
+      color: var(--real-color);
     }
 
     .model-desc {
-      margin-top: 5px;
       font-size: 0.85rem;
-      color: var(--primary-light);
+      margin-bottom: 10px;
     }
 
-    .reasoning {
-      font-size: 0.85rem;
-      color: var(--primary-light);
-      margin-top: 5px;
+    .model-reasoning {
+      background-color: var(--bg-color);
+      padding: 10px;
+      border-radius: 8px;
+      font-size: 0.9rem;
     }
 
-    canvas {
-      margin-top: 30px;
+    .keywords {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+      margin-top: 10px;
     }
 
-    @media (max-width: 768px) {
-      .hero h1 {
-        font-size: 2rem;
+    .keyword {
+      background-color: var(--bg-color);
+      padding: 4px 8px;
+      border-radius: 12px;
+      font-size: 0.8rem;
+    }
+
+    .chart-container {
+      margin-top: 20px;
+      height: 250px;
+    }
+
+    @media (max-width: 900px) {
+      .main-content {
+        flex-direction: column;
+        height: auto;
       }
-      .hero p {
-        font-size: 1rem;
+      
+      .input-section, .results-section {
+        height: auto;
       }
-      input[type="text"] {
-        width: 90%;
+      
+      textarea {
+        height: 200px;
       }
     }
   </style>
 </head>
 
 <body>
-
-  <button class="toggle-theme" onclick="toggleTheme()">Toggle Mode</button>
-
-  <section class="hero">
+  <div class="header">
     <h1>AI-Powered Fake News Detection</h1>
-    <p>Leverage multiple machine learning models to verify the authenticity of news articles with precision and confidence.</p>
+    <div class="theme-switch-wrapper">
+      <label class="theme-switch" for="checkbox">
+        <input type="checkbox" id="checkbox" />
+        <div class="slider"></div>
+      </label>
+      <span class="switch-label">Dark Mode</span>
+    </div>
+  </div>
 
-    <form action="{{ url_for('predict') }}" method="post">
-      <input type="text" name="article" placeholder="Enter a news article" required>
-      <button type="submit">Analyze</button>
-    </form>
-
-    {% if results %}
-      <div class="container">
-        <div class="toast">
-          <h2>Consensus: {{ consensus }}</h2>
-          <ul style="list-style:none; padding:0;">
-            {% for model, info in results.items() %}
-              <li style="margin-bottom: 15px;">
-                <strong>{{ model }}</strong>: {{ info.label }} (Confidence: {{ info.confidence | round(2) }}%)
-                <div class="model-desc">{{ descriptions[model] }}</div>
-                <div class="reasoning">{{ info.reasoning }}</div>
-              </li>
-            {% endfor %}
-          </ul>
-
-          <canvas id="confidenceChart"></canvas>
-        </div>
+  <div class="main-content">
+    <div class="input-section">
+      <div class="card">
+        <form action="{{ url_for('predict') }}" method="post">
+          <textarea name="article" placeholder="Enter a news article to analyze..." required></textarea>
+          <button type="submit" class="analyze">Analyze Article</button>
+        </form>
       </div>
+    </div>
 
-      <script>
-        const labels = [{% for model, info in results.items() %}'{{ model }}',{% endfor %}];
-        const data = [{% for model, info in results.items() %}{{ info.confidence | round(2) }},{% endfor %}];
-        const backgroundColors = data.map(c => c > 85 ? '#2ecc71' : (c < 60 ? '#e74c3c' : '#f1c40f'));
+    <div class="results-section">
+      {% if results %}
+        <div class="results-card">
+          <div class="consensus {% if consensus == 'FAKE' %}consensus-fake{% else %}consensus-real{% endif %}">
+            Consensus: {{ consensus }}
+          </div>
+          
+          {% for model, info in results.items() %}
+            <div class="model-result">
+              <div class="model-header">
+                <span class="model-name">{{ model }}</span>
+                <span class="model-prediction {% if info.label == 'FAKE' %}prediction-fake{% else %}prediction-real{% endif %}">
+                  {{ info.label }} ({{ info.confidence | round(2) }}%)
+                </span>
+              </div>
+              <div class="model-desc">{{ descriptions[model] }}</div>
+              <div class="model-reasoning">
+                <strong>Analysis:</strong> This model identified patterns typically found in 
+                {% if info.label == 'FAKE' %}fabricated{% else %}legitimate{% endif %} news sources.
+                <div class="keywords">
+                  <strong>Key indicators:</strong>
+                  {% if info.label == 'FAKE' %}
+                    <span class="keyword">sensationalism</span>
+                    <span class="keyword">exaggeration</span>
+                    <span class="keyword">emotional language</span>
+                    <span class="keyword">lack of sources</span>
+                  {% else %}
+                    <span class="keyword">balanced reporting</span>
+                    <span class="keyword">factual language</span>
+                    <span class="keyword">proper attribution</span>
+                    <span class="keyword">credible sources</span>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+          
+          <div class="chart-container">
+            <canvas id="confidenceChart"></canvas>
+          </div>
+        </div>
+      {% endif %}
+    </div>
+  </div>
 
-        const ctx = document.getElementById('confidenceChart').getContext('2d');
-        const confidenceChart = new Chart(ctx, {
-          type: 'bar',
-          data: {
-            labels: labels,
-            datasets: [{
-              label: 'Confidence (%)',
-              data: data,
-              backgroundColor: backgroundColors,
-              borderRadius: 10
-            }]
+  <script>
+    // Theme toggle functionality
+    const toggleSwitch = document.querySelector('#checkbox');
+    const switchLabel = document.querySelector('.switch-label');
+    
+    function switchTheme(e) {
+      if (e.target.checked) {
+        document.documentElement.setAttribute('data-theme', 'dark');
+        switchLabel.textContent = 'Light Mode';
+        localStorage.setItem('theme', 'dark');
+      } else {
+        document.documentElement.setAttribute('data-theme', 'light');
+        switchLabel.textContent = 'Dark Mode';
+        localStorage.setItem('theme', 'light');
+      }
+      
+      // Update chart colors if chart exists
+      if (typeof confidenceChart !== 'undefined') {
+        updateChartColors();
+      }
+    }
+    
+    toggleSwitch.addEventListener('change', switchTheme);
+    
+    // Check for saved theme preference
+    const currentTheme = localStorage.getItem('theme') || 'light';
+    if (currentTheme === 'dark') {
+      toggleSwitch.checked = true;
+      document.documentElement.setAttribute('data-theme', 'dark');
+      switchLabel.textContent = 'Light Mode';
+    }
+    
+    {% if results %}
+    // Chart configuration
+    const ctx = document.getElementById('confidenceChart').getContext('2d');
+    const labels = [{% for model, info in results.items() %}'{{ model }}',{% endfor %}];
+    const data = [{% for model, info in results.items() %}{{ info.confidence | round(2) }},{% endfor %}];
+    const predictions = [{% for model, info in results.items() %}'{{ info.label }}',{% endfor %}];
+    
+    function getBarColors() {
+      const theme = document.documentElement.getAttribute('data-theme');
+      const fakeColor = getComputedStyle(document.documentElement).getPropertyValue('--fake-color');
+      const realColor = getComputedStyle(document.documentElement).getPropertyValue('--real-color');
+      
+      return predictions.map(pred => pred === 'FAKE' ? fakeColor : realColor);
+    }
+    
+    const confidenceChart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: labels,
+        datasets: [{
+          label: 'Confidence (%)',
+          data: data,
+          backgroundColor: getBarColors(),
+          borderRadius: 8
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            display: false
           },
-          options: {
-            responsive: true,
-            scales: {
-              x: {
-                ticks: { color: getComputedStyle(document.documentElement).getPropertyValue('--axis-color') },
-                grid: { color: 'rgba(255,255,255,0.1)' }
-              },
-              y: {
-                beginAtZero: true,
-                max: 100,
-                ticks: { color: getComputedStyle(document.documentElement).getPropertyValue('--axis-color') },
-                grid: { color: 'rgba(255,255,255,0.1)' }
+          tooltip: {
+            callbacks: {
+              afterLabel: function(context) {
+                const index = context.dataIndex;
+                return predictions[index];
               }
             }
           }
-        });
-
-        function toggleTheme() {
-          const currentTheme = document.documentElement.getAttribute('data-theme');
-          document.documentElement.setAttribute('data-theme', currentTheme === 'light' ? 'dark' : 'light');
+        },
+        scales: {
+          x: {
+            ticks: { 
+              color: getComputedStyle(document.documentElement).getPropertyValue('--axis-color'),
+              font: {
+                weight: 'bold'
+              }
+            },
+            grid: { 
+              display: false 
+            }
+          },
+          y: {
+            beginAtZero: true,
+            max: 100,
+            ticks: { 
+              color: getComputedStyle(document.documentElement).getPropertyValue('--axis-color'),
+              font: {
+                weight: 'bold'
+              }
+            },
+            grid: { 
+              color: function(context) {
+                const theme = document.documentElement.getAttribute('data-theme');
+                return theme === 'light' ? 'rgba(0,0,0,0.1)' : 'rgba(255,255,255,0.1)';
+              }
+            }
+          }
         }
-      </script>
+      }
+    });
+    
+    function updateChartColors() {
+      confidenceChart.data.datasets[0].backgroundColor = getBarColors();
+      confidenceChart.options.scales.x.ticks.color = getComputedStyle(document.documentElement).getPropertyValue('--axis-color');
+      confidenceChart.options.scales.y.ticks.color = getComputedStyle(document.documentElement).getPropertyValue('--axis-color');
+      confidenceChart.update();
+    }
     {% endif %}
-  </section>
-
+  </script>
 </body>
 </html>
