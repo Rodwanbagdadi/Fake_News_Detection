@@ -25,14 +25,12 @@ stop_words = set(stopwords.words('english'))
 portStemmer = PorterStemmer()
 
 # Load models and vectorizer once
-xgboost_model = joblib.load("models/xgboost_model.pkl")
 random_forest_model = joblib.load("models/random_forest_model.pkl")
 lightgbm_model = joblib.load("models/light_gbm_model.pkl")
 logistic_regression_model = joblib.load("models/logistic_regression_model.pkl")
 vectorizer = joblib.load("models/vectorizer.pkl")
 
 models = {
-    "XGBoost": xgboost_model,
     "Random Forest": random_forest_model,
     "LightGBM": lightgbm_model,
     "Logistic Regression": logistic_regression_model
@@ -67,7 +65,6 @@ def predict():
 
     # Add description for each model
     descriptions = {
-        "XGBoost": "An optimized gradient boosting library designed for high performance.",
         "Random Forest": "An ensemble of decision trees trained on random subsets of data.",
         "LightGBM": "A fast, gradient-boosting framework using tree-based learning algorithms.",
         "Logistic Regression": "A simple linear model for binary classification problems."
