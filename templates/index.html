@@ -10,6 +10,9 @@
 
   <!-- Chart.js -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  
+  <!-- Font Awesome for icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
   <style>
     :root {
@@ -57,7 +60,7 @@
       background-color: var(--bg-color);
       color: var(--text-color);
       overflow-x: hidden;
-      height: 100vh;
+      min-height: 100vh;
       display: flex;
       flex-direction: column;
     }
@@ -81,60 +84,32 @@
     .theme-switch-wrapper {
       display: flex;
       align-items: center;
+      gap: 8px;
     }
 
-    .theme-switch {
-      display: inline-block;
-      height: 24px;
-      position: relative;
-      width: 50px;
-    }
-
-    .theme-switch input {
-      display: none;
-    }
-
-    .slider {
-      background-color: #ccc;
-      bottom: 0;
-      cursor: pointer;
-      left: 0;
-      position: absolute;
-      right: 0;
-      top: 0;
-      transition: .4s;
-      border-radius: 34px;
-    }
-
-    .slider:before {
-      background-color: white;
-      bottom: 4px;
-      content: "";
-      height: 16px;
-      left: 4px;
-      position: absolute;
-      transition: .4s;
-      width: 16px;
-      border-radius: 50%;
-    }
-
-    input:checked + .slider {
+    .theme-toggle {
+      display: flex;
+      align-items: center;
+      justify-content: center;
       background-color: var(--accent-color);
+      color: white;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      cursor: pointer;
+      box-shadow: 0 2px 5px var(--shadow);
+      transition: all 0.3s ease;
     }
 
-    input:checked + .slider:before {
-      transform: translateX(26px);
-    }
-
-    .switch-label {
-      margin-left: 10px;
-      font-size: 0.9rem;
+    .theme-toggle:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px var(--shadow);
     }
 
     .main-content {
       display: flex;
       flex: 1;
-      height: calc(100vh - 60px);
+      min-height: calc(100vh - 68px);
     }
 
     .input-section, .results-section {
@@ -142,8 +117,8 @@
       padding: 20px;
       display: flex;
       flex-direction: column;
-      height: 100%;
       box-sizing: border-box;
+      overflow-y: auto;
     }
 
     .input-section {
@@ -169,6 +144,7 @@
 
     textarea {
       flex: 1;
+      min-height: 250px;
       padding: 15px;
       border-radius: 10px;
       border: 1px solid var(--border-color);
@@ -177,6 +153,7 @@
       color: var(--text-color);
       resize: none;
       margin-bottom: 15px;
+      font-family: 'Poppins', sans-serif;
     }
 
     button.analyze {
@@ -189,15 +166,20 @@
       border-radius: 10px;
       cursor: pointer;
       align-self: flex-end;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 8px;
     }
 
     button.analyze:hover {
       opacity: 0.9;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px var(--shadow);
     }
 
     .results-section {
       background-color: var(--bg-color);
-      overflow-y: auto;
     }
 
     .results-card {
@@ -213,6 +195,9 @@
       margin-bottom: 15px;
       padding-bottom: 10px;
       border-bottom: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      gap: 10px;
     }
     
     .consensus-fake {
@@ -286,6 +271,32 @@
     .chart-container {
       margin-top: 20px;
       height: 250px;
+      width: 100%;
+    }
+
+    .no-results {
+      text-align: center;
+      padding: 40px;
+      color: var(--text-color);
+      opacity: 0.7;
+    }
+
+    .loader {
+      display: none;
+      border: 4px solid rgba(0, 0, 0, 0.1);
+      border-left-color: var(--accent-color);
+      border-radius: 50%;
+      width: 24px;
+      height: 24px;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .loading .loader {
+      display: inline-block;
     }
 
     @media (max-width: 900px) {
@@ -295,10 +306,22 @@
       }
       
       .input-section, .results-section {
-        height: auto;
+        width: 100%;
       }
       
       textarea {
+        min-height: 200px;
+      }
+      
+      .header {
+        padding: 12px 20px;
+      }
+      
+      .header h1 {
+        font-size: 1.2rem;
+      }
+      
+      .chart-container {
         height: 200px;
       }
     }
@@ -309,20 +332,22 @@
   <div class="header">
     <h1>AI-Powered Fake News Detection</h1>
     <div class="theme-switch-wrapper">
-      <label class="theme-switch" for="checkbox">
-        <input type="checkbox" id="checkbox" />
-        <div class="slider"></div>
-      </label>
-      <span class="switch-label">Dark Mode</span>
+      <div class="theme-toggle" id="theme-toggle">
+        <i class="fas fa-moon" id="theme-icon"></i>
+      </div>
     </div>
   </div>
 
   <div class="main-content">
     <div class="input-section">
       <div class="card">
-        <form action="{{ url_for('predict') }}" method="post">
-          <textarea name="article" placeholder="Enter a news article to analyze..." required></textarea>
-          <button type="submit" class="analyze">Analyze Article</button>
+        <form id="analysis-form" action="{{ url_for('predict') }}" method="post">
+          <textarea id="article-input" name="article" placeholder="Enter a news article to analyze..." required>{{ article_text|default('') }}</textarea>
+          <button type="submit" class="analyze">
+            <span>Analyze Article</span>
+            <div class="loader"></div>
+            <i class="fas fa-search"></i>
+          </button>
         </form>
       </div>
     </div>
@@ -331,7 +356,8 @@
       {% if results %}
         <div class="results-card">
           <div class="consensus {% if consensus == 'FAKE' %}consensus-fake{% else %}consensus-real{% endif %}">
-            Consensus: {{ consensus }}
+            <i class="fas {% if consensus == 'FAKE' %}fa-ban{% else %}fa-check-circle{% endif %}"></i>
+            <span>Consensus: {{ consensus }}</span>
           </div>
           
           {% for model, info in results.items() %}
@@ -368,25 +394,29 @@
             <canvas id="confidenceChart"></canvas>
           </div>
         </div>
+      {% else %}
+        <div class="results-card no-results">
+          <i class="fas fa-chart-bar" style="font-size: 3rem; margin-bottom: 1rem; opacity: 0.5;"></i>
+          <p>Analysis results will appear here after you submit an article.</p>
+        </div>
       {% endif %}
     </div>
   </div>
 
   <script>
     // Theme toggle functionality
-    const toggleSwitch = document.querySelector('#checkbox');
-    const switchLabel = document.querySelector('.switch-label');
+    const themeToggle = document.getElementById('theme-toggle');
+    const themeIcon = document.getElementById('theme-icon');
     
-    function switchTheme(e) {
-      if (e.target.checked) {
-        document.documentElement.setAttribute('data-theme', 'dark');
-        switchLabel.textContent = 'Light Mode';
-        localStorage.setItem('theme', 'dark');
-      } else {
-        document.documentElement.setAttribute('data-theme', 'light');
-        switchLabel.textContent = 'Dark Mode';
-        localStorage.setItem('theme', 'light');
-      }
+    function toggleTheme() {
+      const currentTheme = document.documentElement.getAttribute('data-theme');
+      const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+      
+      document.documentElement.setAttribute('data-theme', newTheme);
+      localStorage.setItem('theme', newTheme);
+      
+      // Update icon
+      themeIcon.className = newTheme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
       
       // Update chart colors if chart exists
       if (typeof confidenceChart !== 'undefined') {
@@ -394,97 +424,116 @@
       }
     }
     
-    toggleSwitch.addEventListener('change', switchTheme);
+    themeToggle.addEventListener('click', toggleTheme);
     
     // Check for saved theme preference
     const currentTheme = localStorage.getItem('theme') || 'light';
     if (currentTheme === 'dark') {
-      toggleSwitch.checked = true;
       document.documentElement.setAttribute('data-theme', 'dark');
-      switchLabel.textContent = 'Light Mode';
+      themeIcon.className = 'fas fa-sun';
     }
+    
+    // Form submission - prevent default and use AJAX
+    document.getElementById('analysis-form').addEventListener('submit', function(e) {
+      // We're not implementing the AJAX here as it would need backend changes
+      // But this ensures the user sees the loading animation
+      document.querySelector('.analyze').classList.add('loading');
+    });
     
     {% if results %}
     // Chart configuration
-    const ctx = document.getElementById('confidenceChart').getContext('2d');
-    const labels = [{% for model, info in results.items() %}'{{ model }}',{% endfor %}];
-    const data = [{% for model, info in results.items() %}{{ info.confidence | round(2) }},{% endfor %}];
-    const predictions = [{% for model, info in results.items() %}'{{ info.label }}',{% endfor %}];
-    
-    function getBarColors() {
-      const theme = document.documentElement.getAttribute('data-theme');
-      const fakeColor = getComputedStyle(document.documentElement).getPropertyValue('--fake-color');
-      const realColor = getComputedStyle(document.documentElement).getPropertyValue('--real-color');
+    document.addEventListener('DOMContentLoaded', function() {
+      const ctx = document.getElementById('confidenceChart').getContext('2d');
+      const labels = [{% for model, info in results.items() %}'{{ model }}',{% endfor %}];
+      const data = [{% for model, info in results.items() %}{{ info.confidence | round(2) }},{% endfor %}];
+      const predictions = [{% for model, info in results.items() %}'{{ info.label }}',{% endfor %}];
       
-      return predictions.map(pred => pred === 'FAKE' ? fakeColor : realColor);
-    }
-    
-    const confidenceChart = new Chart(ctx, {
-      type: 'bar',
-      data: {
-        labels: labels,
-        datasets: [{
-          label: 'Confidence (%)',
-          data: data,
-          backgroundColor: getBarColors(),
-          borderRadius: 8
-        }]
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-          legend: {
-            display: false
-          },
-          tooltip: {
-            callbacks: {
-              afterLabel: function(context) {
-                const index = context.dataIndex;
-                return predictions[index];
-              }
-            }
-          }
+      function getBarColors() {
+        const fakeColor = getComputedStyle(document.documentElement).getPropertyValue('--fake-color').trim();
+        const realColor = getComputedStyle(document.documentElement).getPropertyValue('--real-color').trim();
+        return predictions.map(pred => pred === 'FAKE' ? fakeColor : realColor);
+      }
+      
+      window.confidenceChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: labels,
+          datasets: [{
+            label: 'Confidence (%)',
+            data: data,
+            backgroundColor: getBarColors(),
+            borderRadius: 8
+          }]
         },
-        scales: {
-          x: {
-            ticks: { 
-              color: getComputedStyle(document.documentElement).getPropertyValue('--axis-color'),
-              font: {
-                weight: 'bold'
-              }
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              display: false
             },
-            grid: { 
-              display: false 
+            tooltip: {
+              callbacks: {
+                afterLabel: function(context) {
+                  const index = context.dataIndex;
+                  return predictions[index];
+                }
+              }
             }
           },
-          y: {
-            beginAtZero: true,
-            max: 100,
-            ticks: { 
-              color: getComputedStyle(document.documentElement).getPropertyValue('--axis-color'),
-              font: {
-                weight: 'bold'
+          scales: {
+            x: {
+              ticks: { 
+                color: getComputedStyle(document.documentElement).getPropertyValue('--axis-color').trim(),
+                font: {
+                  weight: 'bold'
+                }
+              },
+              grid: { 
+                display: false 
               }
             },
-            grid: { 
-              color: function(context) {
-                const theme = document.documentElement.getAttribute('data-theme');
-                return theme === 'light' ? 'rgba(0,0,0,0.1)' : 'rgba(255,255,255,0.1)';
+            y: {
+              beginAtZero: true,
+              max: 100,
+              ticks: { 
+                color: getComputedStyle(document.documentElement).getPropertyValue('--axis-color').trim(),
+                font: {
+                  weight: 'bold'
+                }
+              },
+              grid: { 
+                color: function(context) {
+                  const theme = document.documentElement.getAttribute('data-theme');
+                  return theme === 'light' ? 'rgba(0,0,0,0.1)' : 'rgba(255,255,255,0.1)';
+                }
               }
             }
           }
         }
-      }
+      });
     });
     
     function updateChartColors() {
-      confidenceChart.data.datasets[0].backgroundColor = getBarColors();
-      confidenceChart.options.scales.x.ticks.color = getComputedStyle(document.documentElement).getPropertyValue('--axis-color');
-      confidenceChart.options.scales.y.ticks.color = getComputedStyle(document.documentElement).getPropertyValue('--axis-color');
-      confidenceChart.update();
+      if (window.confidenceChart) {
+        const fakeColor = getComputedStyle(document.documentElement).getPropertyValue('--fake-color').trim();
+        const realColor = getComputedStyle(document.documentElement).getPropertyValue('--real-color').trim();
+        const predictions = [{% for model, info in results.items() %}'{{ info.label }}',{% endfor %}];
+        
+        window.confidenceChart.data.datasets[0].backgroundColor = predictions.map(pred => pred === 'FAKE' ? fakeColor : realColor);
+        window.confidenceChart.options.scales.x.ticks.color = getComputedStyle(document.documentElement).getPropertyValue('--axis-color').trim();
+        window.confidenceChart.options.scales.y.ticks.color = getComputedStyle(document.documentElement).getPropertyValue('--axis-color').trim();
+        window.confidenceChart.update();
+      }
     }
     {% endif %}
+    
+    // Ensure charts are properly sized for mobile
+    window.addEventListener('resize', function() {
+      if (typeof confidenceChart !== 'undefined') {
+        confidenceChart.resize();
+      }
+    });
   </script>
 </body>
 </html>
