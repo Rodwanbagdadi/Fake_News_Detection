@@ -14,7 +14,7 @@ from sklearn.linear_model import LogisticRegression
 import os
 import joblib
 
-# Creat an app object using the flask class
+# Create an app object using the flask class
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = 'uploads/'
 
@@ -56,8 +56,6 @@ def preprocess(text):
 def home():
     return render_template('index.html')
 
-# In your predict() function inside app.py
-
 
 @app.route('/predict', methods=['POST'])
 def predict():
@@ -73,11 +71,18 @@ def predict():
         "Logistic Regression": "A simple linear model for binary classification problems."
     }
 
-    return render_template('index.html', results=results, consensus=consensus, descriptions=descriptions)
+    # Pass article back to the template so it remains in the textarea
+    return render_template('index.html',
+                           results=results,
+                           consensus=consensus,
+                           descriptions=descriptions,
+                           article=article)  # Pass the article text back
 
 
 def predict_single_article(article, return_detailed=False):
-    article_vectorized = vectorizer.transform([article])
+    # Preprocess the article before vectorizing
+    processed_article = preprocess(article)
+    article_vectorized = vectorizer.transform([processed_article])
 
     model_results = {}
 

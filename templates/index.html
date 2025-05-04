@@ -342,7 +342,7 @@
     <div class="input-section">
       <div class="card">
         <form id="analysis-form" action="{{ url_for('predict') }}" method="post">
-          <textarea id="article-input" name="article" placeholder="Enter a news article to analyze..." required>{{ article_text|default('') }}</textarea>
+          <textarea id="article-input" name="article" placeholder="Enter a news article to analyze..." required>{{ article }}</textarea>
           <button type="submit" class="analyze">
             <span>Analyze Article</span>
             <div class="loader"></div>
