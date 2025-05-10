@@ -6,6 +6,6 @@ numpy==2.2.5
 pandas==2.2.3
 scikit_learn==1.6.1
 torch==2.7.0
-transformers==4.49.0
+transformers==4.50.0
 xgboost==3.0.0
 gunicorn
