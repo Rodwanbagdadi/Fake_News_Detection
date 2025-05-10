@@ -36,7 +36,7 @@ vectorizer = joblib.load("models/vectorizer.pkl")
 # Load BERT model and tokenizer
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 # Path to your saved BERT model
-bert_model_path = "C:/Users/OMEN/Desktop/FND+BERT/models"
+bert_model_path = "models"
 
 try:
     bert_tokenizer = AutoTokenizer.from_pretrained(bert_model_path)
