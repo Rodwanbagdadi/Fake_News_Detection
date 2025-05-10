@@ -30,6 +30,8 @@
       --axis-color-dark: #dddddd;
       --fake-color: #e53935;
       --real-color: #43a047;
+      --bert-color-light: #2196f3;
+      --bert-color-dark: #64b5f6;
       --shadow-light: rgba(0, 0, 0, 0.1);
       --shadow-dark: rgba(0, 0, 0, 0.3);
     }
@@ -39,6 +41,7 @@
       --card-bg: var(--secondary-light);
       --text-color: var(--text-light);
       --accent-color: var(--accent-light);
+      --bert-color: var(--bert-color-light);
       --axis-color: var(--axis-color-light);
       --border-color: var(--border-light);
       --shadow: var(--shadow-light);
@@ -49,6 +52,7 @@
       --card-bg: var(--secondary-dark);
       --text-color: var(--text-dark);
       --accent-color: var(--accent-dark);
+      --bert-color: var(--bert-color-dark);
       --axis-color: var(--axis-color-dark);
       --border-color: var(--border-dark);
       --shadow: var(--shadow-dark);
@@ -208,6 +212,45 @@
       color: var(--real-color);
     }
 
+    .bert-model {
+      margin-bottom: 25px;
+      padding: 15px;
+      border-radius: 10px;
+      background-color: rgba(33, 150, 243, 0.1);
+      border-left: 4px solid var(--bert-color);
+    }
+
+    .bert-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .bert-name {
+      font-weight: bold;
+      font-size: 1.1rem;
+      color: var(--bert-color);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .bert-badge {
+      background-color: var(--bert-color);
+      color: white;
+      font-size: 0.7rem;
+      padding: 3px 6px;
+      border-radius: 10px;
+      margin-left: 6px;
+    }
+
+    .bert-prediction {
+      padding: 4px 12px;
+      border-radius: 15px;
+      font-weight: bold;
+    }
+
     .model-result {
       margin-bottom: 20px;
       padding-bottom: 15px;
@@ -266,6 +309,36 @@
       padding: 4px 8px;
       border-radius: 12px;
       font-size: 0.8rem;
+    }
+
+    .bert-features {
+      margin-top: 12px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .bert-feature {
+      background-color: var(--bg-color);
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .feature-score {
+      background-color: var(--bert-color);
+      color: white;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      font-weight: bold;
     }
 
     .chart-container {
@@ -360,7 +433,42 @@
             <span>Consensus: {{ consensus }}</span>
           </div>
           
+          {% if 'BERT' in results %}
+          <div class="bert-model">
+            <div class="bert-header">
+              <span class="bert-name">
+                <i class="fas fa-robot"></i>
+                BERT Model
+                <span class="bert-badge">Advanced NLP</span>
+              </span>
+              <span class="model-prediction {% if results['BERT'].label == 'FAKE' %}prediction-fake{% else %}prediction-real{% endif %}">
+                {{ results['BERT'].label }} ({{ results['BERT'].confidence | round(2) }}%)
+              </span>
+            </div>
+            <div class="model-desc">{{ descriptions['BERT'] }}</div>
+            <div class="model-reasoning">
+              <strong>Deep Analysis:</strong> Using contextual understanding of language, this model 
+              {% if results['BERT'].label == 'FAKE' %}identified patterns of misinformation and detected untrustworthy content.{% else %}recognized patterns consistent with reliable and factual reporting.{% endif %}
+              
+              <div class="bert-features">
+                {% if results['BERT'].label == 'FAKE' %}
+                  <span class="bert-feature"><span class="feature-score">+</span>Contextual inconsistency</span>
+                  <span class="bert-feature"><span class="feature-score">+</span>Questionable claims</span>
+                  <span class="bert-feature"><span class="feature-score">+</span>Emotional manipulation</span>
+                  <span class="bert-feature"><span class="feature-score">+</span>Credibility issues</span>
+                {% else %}
+                  <span class="bert-feature"><span class="feature-score">+</span>Contextual coherence</span>
+                  <span class="bert-feature"><span class="feature-score">+</span>Factual consistency</span>
+                  <span class="bert-feature"><span class="feature-score">+</span>Balanced presentation</span>
+                  <span class="bert-feature"><span class="feature-score">+</span>Source credibility</span>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+          {% endif %}
+          
           {% for model, info in results.items() %}
+            {% if model != 'BERT' %}
             <div class="model-result">
               <div class="model-header">
                 <span class="model-name">{{ model }}</span>
@@ -388,6 +496,7 @@
                 </div>
               </div>
             </div>
+            {% endif %}
           {% endfor %}
           
           <div class="chart-container">
@@ -396,8 +505,8 @@
         </div>
       {% else %}
         <div class="results-card no-results">
-          <i class="fas fa-chart-bar" style="font-size: 3rem; margin-bottom: 1rem; opacity: 0.5;"></i>
-          <p>Analysis results will appear here after you submit an article.</p>
+          <i class="fas fa-robot" style="font-size: 3rem; margin-bottom: 1rem; opacity: 0.5;"></i>
+          <p>Submit an article to get AI-powered analysis from multiple models, including BERT.</p>
         </div>
       {% endif %}
     </div>
@@ -451,7 +560,11 @@
       function getBarColors() {
         const fakeColor = getComputedStyle(document.documentElement).getPropertyValue('--fake-color').trim();
         const realColor = getComputedStyle(document.documentElement).getPropertyValue('--real-color').trim();
-        return predictions.map(pred => pred === 'FAKE' ? fakeColor : realColor);
+        // const bertColor = getComputedStyle(document.documentElement).getPropertyValue('--bert-color').trim();
+        
+        return labels.map((label, i) => {
+          return predictions[i] === 'FAKE' ? fakeColor : realColor;
+        });
       }
       
       window.confidenceChart = new Chart(ctx, {
@@ -518,22 +631,19 @@
       if (window.confidenceChart) {
         const fakeColor = getComputedStyle(document.documentElement).getPropertyValue('--fake-color').trim();
         const realColor = getComputedStyle(document.documentElement).getPropertyValue('--real-color').trim();
+        const bertColor = getComputedStyle(document.documentElement).getPropertyValue('--bert-color').trim();
+        const labels = [{% for model, info in results.items() %}'{{ model }}',{% endfor %}];
         const predictions = [{% for model, info in results.items() %}'{{ info.label }}',{% endfor %}];
         
-        window.confidenceChart.data.datasets[0].backgroundColor = predictions.map(pred => pred === 'FAKE' ? fakeColor : realColor);
+        window.confidenceChart.data.datasets[0].backgroundColor = labels.map((label, i) => {
+          return predictions[i] === 'FAKE' ? fakeColor : realColor;
+        });
+        
         window.confidenceChart.options.scales.x.ticks.color = getComputedStyle(document.documentElement).getPropertyValue('--axis-color').trim();
         window.confidenceChart.options.scales.y.ticks.color = getComputedStyle(document.documentElement).getPropertyValue('--axis-color').trim();
-        window.confidenceChart.update();
       }
     }
     {% endif %}
-    
-    // Ensure charts are properly sized for mobile
-    window.addEventListener('resize', function() {
-      if (typeof confidenceChart !== 'undefined') {
-        confidenceChart.resize();
-      }
-    });
   </script>
 </body>
 </html>
