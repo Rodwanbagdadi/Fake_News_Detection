@@ -1,6 +1,6 @@
 # AI-Powered Fake News Detection System
 
-A robust fake news detection system that combines multiple machine learning models, including DistilBERT, to analyze and classify news articles as real or fake.
+A robust fake news detection system that combines multiple machine learning models, including DistilBERT, LighGBM, XGBoost, Random Forests and Logistic Regression, to analyze and classify news articles as real or fake.
 
 ![Fake News Detection](https://img.shields.io/badge/Fake%20News%20Detection-AI%20Powered-blue)
 ![Python](https://img.shields.io/badge/Python-3.8%2B-green)
