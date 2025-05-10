@@ -68,6 +68,7 @@ A robust fake news detection system that combines multiple machine learning mode
    - Click "Analyze Article" to get predictions
 
 ## 📁 Project Structure
+<pre>
 fake-news-detection/
 ├── app.py                 # Main Flask application
 ├── models/                # Trained model files
@@ -79,6 +80,7 @@ fake-news-detection/
 │   └── index.html         # Main web interface
 ├── static/                # Static files (CSS, JS)
 └── requirements.txt       # Project dependencies
+</pre>
 
 ## 🛠️ Technical Details
 
