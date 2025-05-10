@@ -69,18 +69,6 @@ A robust fake news detection system that combines multiple machine learning mode
 
 ## 📁 Project Structure
 
-fake-news-detection/
-├── app.py # Main Flask application
-├── models/ # Trained model files
-│ ├── model.safetensors # DistilBERT model
-│ ├── xgboost_model.pkl
-│ ├── random_forest_model.pkl
-│ └── ...
-├── templates/ # HTML templates
-│ └── index.html # Main web interface
-├── static/ # Static files (CSS, JS)
-└── requirements.txt # Project dependencies
-
 
 ## 🛠️ Technical Details
 
