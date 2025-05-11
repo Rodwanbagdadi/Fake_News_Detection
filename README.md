@@ -19,6 +19,36 @@ A robust fake news detection system that combines multiple machine learning mode
 - **Consensus Voting**: Weighted voting system for final prediction
 - **Visual Analytics**: Interactive charts showing model confidence levels
 
+## ��️ Technologies Used
+
+### Backend
+- **Python 3.8+**: Core programming language
+- **Flask**: Web framework for building the application
+- **Gunicorn**: WSGI HTTP Server for production deployment
+- **NLTK**: Natural Language Processing toolkit for text preprocessing
+- **Scikit-learn**: Machine learning library for traditional ML models
+- **Joblib**: For model serialization and loading
+
+### Machine Learning & AI
+- **Transformers (Hugging Face)**: For DistilBERT model implementation
+- **PyTorch**: Deep learning framework for BERT model
+- **XGBoost**: Gradient boosting framework
+- **LightGBM**: Light gradient boosting machine
+- **Scikit-learn**: For Random Forest and Logistic Regression
+
+### Frontend
+- **HTML5/CSS3**: For structure and styling
+- **JavaScript**: For interactive features
+- **Chart.js**: For data visualization
+- **Font Awesome**: For icons
+- **Google Fonts**: For typography
+
+### Development & Deployment
+- **Git**: Version control
+- **GitHub**: Code hosting
+- **Render**: Cloud platform for deployment
+- **Conda**: Environment management
+
 ## 🚀 Quick Start
 
 ### Prerequisites
