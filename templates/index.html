@@ -438,7 +438,7 @@
             <div class="bert-header">
               <span class="bert-name">
                 <i class="fas fa-robot"></i>
-                DistilBERT Model
+                DistilBERT
                 <span class="bert-badge">Advanced NLP</span>
               </span>
               <span class="model-prediction {% if results['BERT'].label == 'FAKE' %}prediction-fake{% else %}prediction-real{% endif %}">
@@ -553,7 +553,7 @@
     // Chart configuration
     document.addEventListener('DOMContentLoaded', function() {
       const ctx = document.getElementById('confidenceChart').getContext('2d');
-      const labels = [{% for model, info in results.items() %}'{{ model }}',{% endfor %}];
+      const labels = [{% for model in results.keys() %}{% if model == 'BERT' %}'DistilBERT'{% else %}'{{ model }}'{% endif %}{% if not loop.last %}, {% endif %}{% endfor %}];
       const data = [{% for model, info in results.items() %}{{ info.confidence | round(2) }},{% endfor %}];
       const predictions = [{% for model, info in results.items() %}'{{ info.label }}',{% endfor %}];
       
@@ -632,7 +632,7 @@
         const fakeColor = getComputedStyle(document.documentElement).getPropertyValue('--fake-color').trim();
         const realColor = getComputedStyle(document.documentElement).getPropertyValue('--real-color').trim();
         const bertColor = getComputedStyle(document.documentElement).getPropertyValue('--bert-color').trim();
-        const labels = [{% for model, info in results.items() %}'{{ model }}',{% endfor %}];
+        const labels = [{% for model in results.keys() %}{% if model == 'BERT' %}'DistilBERT'{% else %}'{{ model }}'{% endif %}{% if not loop.last %}, {% endif %}{% endfor %}];
         const predictions = [{% for model, info in results.items() %}'{{ info.label }}',{% endfor %}];
         
         window.confidenceChart.data.datasets[0].backgroundColor = labels.map((label, i) => {
