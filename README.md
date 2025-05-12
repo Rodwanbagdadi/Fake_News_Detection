@@ -1,3 +1,9 @@
+# 🌐 Live Demo
+
+You can visit the fully functioning website here: [https://flask-grad-project.onrender.com/](https://flask-grad-project.onrender.com/)
+
+---
+
 # AI-Powered Fake News Detection System
 
 A robust fake news detection system that combines multiple machine learning models, including DistilBERT, LighGBM, XGBoost, Random Forests and Logistic Regression, to analyze and classify news articles as real or fake.
