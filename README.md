@@ -25,7 +25,7 @@ A robust fake news detection system that combines multiple machine learning mode
 - **Consensus Voting**: Weighted voting system for final prediction
 - **Visual Analytics**: Interactive charts showing model confidence levels
 
-## ��️ Technologies Used
+## Technologies Used
 
 ### Backend
 - **Python 3.8+**: Core programming language
