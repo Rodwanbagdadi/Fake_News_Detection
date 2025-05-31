@@ -127,6 +127,8 @@ fake-news-detection/
 1. **DistilBERT**
    - Transformer-based model for deep semantic understanding
    - Handles contextual analysis and nuanced language patterns
+   - Uses contextual understanding of language
+   - Generally has higher accuracy than traditional ML models
 
 2. **Traditional ML Models**
    - XGBoost: Gradient boosting for structured data
@@ -147,9 +149,58 @@ fake-news-detection/
    - BERT model uses transformer architecture
    - Other models use TF-IDF features
 
-3. **Consensus Voting**
-   - BERT predictions count double (weighted voting)
-   - Final decision based on majority vote
+3. **Consensus Voting System**
+   The system uses a weighted voting mechanism to determine the final prediction:
+   
+   - **Vote Weighting:**
+     - BERT model gets 2 votes (counted twice)
+     - All other models get 1 vote each
+     - Total votes = Number of models + 1 (because BERT counts twice)
+   
+   - **Example Calculation:**
+     ```
+     Models: BERT, XGBoost, Random Forest, LightGBM, Logistic Regression
+     Total votes = 6 (5 models + 1 extra for BERT)
+     
+     If BERT predicts FAKE:
+     - BERT: 2 votes for FAKE
+     - Other models: 1 vote each
+     - Need > 3 votes (50% of 6) for FAKE consensus
+     ```
+   
+   - **Decision Making:**
+     - If more than 50% of total votes are "FAKE" → Final prediction is FAKE
+     - Otherwise → Final prediction is REAL
+   
+   - **Example Scenarios:**
+     ```
+     Scenario 1:
+     - BERT: FAKE (2 votes)
+     - XGBoost: FAKE (1 vote)
+     - Random Forest: FAKE (1 vote)
+     - LightGBM: REAL (1 vote)
+     - Logistic Regression: REAL (1 vote)
+     Total: 4 FAKE votes out of 6 → Consensus: FAKE
+
+     Scenario 2:
+     - BERT: REAL (2 votes)
+     - XGBoost: FAKE (1 vote)
+     - Random Forest: FAKE (1 vote)
+     - LightGBM: REAL (1 vote)
+     - Logistic Regression: REAL (1 vote)
+     Total: 3 FAKE votes out of 6 → Consensus: REAL
+     ```
+
+   - **Why BERT gets 2 votes:**
+     - More sophisticated model architecture
+     - Better at understanding context and nuance
+     - Generally higher accuracy in practice
+     - Can better handle complex language patterns
+
+   This weighted voting system ensures:
+   - BERT's prediction has more influence
+   - System is robust against individual model errors
+   - Final decision considers both traditional ML and transformer-based approaches
 
 ## 🎯 Usage Example
 
